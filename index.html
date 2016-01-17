@@ -7,7 +7,22 @@
 (function () {
 
   var PLAYER_BASE_URL = 'https://youtube.com/embed/';
-  var PLAYER_QUERY = '?autoplay=1&controls=0&showinfo=0&autohide=1';
+  var PLAYER_QUERY = serializeQuery({
+    // Play automatically
+    autoplay: 1,
+    // Hide player controls
+    controls: 0,
+    // Hide all video info
+    showinfo: 0,
+    // Hide progress bar (unnecessary for HTML5 player)
+    autohide: 1,
+    // Hide annotations
+    iv_load_policy: 3,
+    // Hide related videos at the end
+    rel: 0,
+    // Slow YouTube's branding roll
+    modestbranding: 1
+  });
   var DEFAULT_CHANNEL_INTERVAL = 10000;
 
   initPlayer();
@@ -63,9 +78,32 @@
       'mw_HKzo9Ync',
       'cScB5FuQCIk',
       'RXJKdh1KZ0w',
-      'oi78FH2QhrA',
-      'mAPBm_0ftAY'
+      'oi78FH2QhrA'
     ];
+
+  }
+
+  // Serialize an object into a query string
+  // see http://stackoverflow.com/a/1714899
+  function serializeQuery(obj) {
+
+    var str = [];
+
+    for (var p in obj) {
+
+      if (obj.hasOwnProperty(p)) {
+
+        str.push(
+          encodeURIComponent(p) 
+          + "=" 
+          + encodeURIComponent(obj[p])
+        );
+
+      }
+
+    }
+
+    return str && str.length ? '?' + str.join("&") : '';
 
   }
 
