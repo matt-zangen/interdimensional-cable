@@ -126,28 +126,4 @@
 
   }
 
-  // Serialize an object into a query string
-  // see http://stackoverflow.com/a/1714899
-  function serializeQuery(obj) {
-
-    var str = [];
-
-    for (var p in obj) {
-
-      if (obj.hasOwnProperty(p)) {
-
-        str.push(
-          encodeURIComponent(p) 
-          + "=" 
-          + encodeURIComponent(obj[p])
-        );
-
-      }
-
-    }
-
-    return str && str.length ? '?' + str.join("&") : '';
-
-  }
-
 </script>
