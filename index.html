@@ -1,12 +1,73 @@
 <div style="position: fixed; z-index: -99; width: 100%; height: 100%">
-  <iframe id="player-frame" frameborder="0" height="100%" width="100%" 
-    src="https://youtube.com/embed/SItFvB0Upb8?autoplay=1&controls=0&showinfo=0&autohide=1">
+  <iframe id="player-frame" frameborder="0" height="100%" width="100%"
+    src="https://youtube.com/embed/?autoplay=1&controls=0&showinfo=0&autohide=1">
   </iframe>
 </div>
 <script>
-  setTimeout(function () {
+(function () {
 
-    document.getElementById('player-frame').src = 'https://youtube.com/embed/MG_e_PSBknA?autoplay=1&controls=0&showinfo=0&autohide=1';
+  var PLAYER_BASE_URL = 'https://youtube.com/embed/';
+  var PLAYER_QUERY = '?autoplay=1&controls=0&showinfo=0&autohide=1';
+  var DEFAULT_CHANNEL_INTERVAL = 10000;
 
-  }, 3000);
+  initPlayer();
+
+  function initPlayer() {
+
+    var i = 0;
+
+    changeChannel(i);
+
+    setInterval(function () {
+
+      changeChannel(++i);
+
+    }, DEFAULT_CHANNEL_INTERVAL);
+
+  }
+
+  function changeChannel(channelIndex) {
+
+    var channelId = getAllChannels()[channelIndex];
+
+    if (channelId) {
+
+      document.getElementById('player-frame').src = PLAYER_BASE_URL + channelId + PLAYER_QUERY;
+
+    }
+
+  }
+
+  function getAllChannels() {
+
+    return [
+      'SItFvB0Upb8',
+      'MG_e_PSBknA',
+      'UhHhXukovMU',
+      'UGBZnfB46es',
+      '2RbRoF2AKAc',
+      'S8rNRmmosmA',
+      'X-TAaFg2vzY',
+      'sKLWwsGtuVI',
+      'W7Hoz2ZHYZM',
+      'Yi7KWVCwmkI',
+      'SFmM5CWnmtE',
+      'NgWn7zbgxZ4',
+      '5rz1TcLVFzY',
+      'MUzJjPL2HoA',
+      '9wz0KitxtDQ',
+      'pkC7dcxZ5_Q',
+      'iKC21wDarBo',
+      '19PWUliieNM',
+      'MOzmbza9D5c',
+      'mw_HKzo9Ync',
+      'cScB5FuQCIk',
+      'RXJKdh1KZ0w',
+      'oi78FH2QhrA',
+      'mAPBm_0ftAY'
+    ];
+
+  }
+
+}());
 </script>
