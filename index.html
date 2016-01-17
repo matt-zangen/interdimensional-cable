@@ -1,6 +1,7 @@
 <div id="player" style="position: fixed; z-index: -99; width: 100%; height: 100%">
 </div>
-<img id="static" src="https://fat.gfycat.com/ThisDifficultCats.gif" style="display: block">
+<canvas id="static-video" style="display: block; background: #d0f; background-size: cover;"></canvas>
+<audio id="static-audio" src="assets/static.mp3"></audio>
 <script>
 
   var tag = document.createElement('script');
@@ -12,14 +13,72 @@
 </script>
 <script>
 
-  var DEFAULT_CHANNEL_INTERVAL = 4000;
+  // http://jsfiddle.net/AbdiasSoftware/t4Pvq/
+
+  var canvas = document.getElementById('static-video'),
+    ctx = canvas.getContext('2d');
+
+  // a variant using fixed canvas size but strecthes the result.
+  // emulates interference/bad reception
+  // using a different "noise" algo
+  canvas.width = canvas.height = '256';
+
+  function resize() {
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+  }
+  resize();
+  window.onresize = resize;
+
+  function noise(ctx) {
+      
+      var w = ctx.canvas.width,
+          h = ctx.canvas.height,
+          idata = ctx.getImageData(0, 0, w, h),
+          buffer32 = new Uint32Array(idata.data.buffer),
+          len = buffer32.length,
+          i = 0,
+          pr = 456 * Math.random(),
+          prs = 716 * Math.random();;
+
+      for(; i < len;) {
+          buffer32[i++] = ((pr % 255)|0) << 24;
+          pr += prs * 1.2;
+      }
+      
+      ctx.putImageData(idata, 0, 0);
+  }
+
+  var toggleCanvas = true;
+
+  // added toggle to get 30 FPS instead of 60 FPS
+  (function loop() {
+      toggleCanvas = !toggleCanvas;
+      if (toggleCanvas) {
+          requestAnimationFrame(loop);
+          return;
+      }
+      noise(ctx);
+      requestAnimationFrame(loop);
+  })();
+
+</script>
+<script>
+
+  var DEFAULT_CHANNEL_INTERVAL = 6000;
 
   var player;
 
   var channels = getAllChannels();
   var channelIndex = 0;
 
-  var staticChannelElem = document.getElementById('static');
+  var staticChannelVideo = canvas;
+  var staticChannelSound = document.getElementById('static-audio');
+
+  staticChannelSound.loop = true;
+  staticChannelSound.oncanplay = function () {
+    staticChannelSound.play();
+  };
 
   function onYouTubeIframeAPIReady() {
 
@@ -56,7 +115,6 @@
     if (e.data === YT.PlayerState.PLAYING) {
 
       toggleStaticChannel();
-
       setTimeout(function () {
 
         changeChannel(channels[++channelIndex]);
@@ -75,7 +133,17 @@
 
   function toggleStaticChannel() {
 
-    toggleShow(staticChannelElem);
+    toggleShow(staticChannelVideo);
+
+    if (staticChannelSound.paused) {
+
+      staticChannelSound.play();
+
+    } else {
+
+      staticChannelSound.pause();
+
+    }
 
   }
 
@@ -83,10 +151,12 @@
 
     if (!channelId) {
 
+
       return;
 
     }
 
+    player.pauseVideo();
     toggleStaticChannel();
     setTimeout(function () {
 
