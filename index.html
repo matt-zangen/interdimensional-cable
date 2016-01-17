@@ -1,210 +1,22 @@
-<div id="player" style="position: fixed; z-index: -99; width: 100%; height: 100%">
-</div>
-<canvas id="static-video" style="display: block; background: #d0f; background-size: cover;"></canvas>
-<audio id="static-audio" src="assets/static.mp3"></audio>
-<script>
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Interdimensional Cable</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  var tag = document.createElement('script');
+        <link rel="stylesheet" href="css/app.css">
+    </head>
+    <body>
 
-  tag.src = "https://www.youtube.com/iframe_api";
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        <div id="player"></div>
+        <canvas id="static-video"></canvas>
+        <audio id="static-audio" src="assets/static.mp3" loop="true"></audio>
 
-</script>
-<script>
-
-  // http://jsfiddle.net/AbdiasSoftware/t4Pvq/
-
-  var canvas = document.getElementById('static-video'),
-    ctx = canvas.getContext('2d');
-
-  // a variant using fixed canvas size but strecthes the result.
-  // emulates interference/bad reception
-  // using a different "noise" algo
-  canvas.width = canvas.height = '256';
-
-  function resize() {
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-  }
-  resize();
-  window.onresize = resize;
-
-  function noise(ctx) {
-
-    var w = ctx.canvas.width,
-      h = ctx.canvas.height,
-      idata = ctx.getImageData(0, 0, w, h),
-      buffer32 = new Uint32Array(idata.data.buffer),
-      len = buffer32.length,
-      i = 0,
-      pr = 456 * Math.random(),
-      prs = 716 * Math.random();;
-
-    for(; i < len;) {
-
-      buffer32[i++] = ((pr % 255)|0) << 24;
-      pr += prs * 1.2;
-
-    }
-
-    ctx.putImageData(idata, 0, 0);
-
-  }
-
-  var toggleCanvas = true;
-
-  // added toggle to get 30 FPS instead of 60 FPS
-  (function loop() {
-
-      toggleCanvas = !toggleCanvas;
-      if (toggleCanvas) {
-
-          requestAnimationFrame(loop);
-          return;
-
-      }
-
-      canvas.style['background-color'] = Math.floor(Math.random() * 16777215).toString(16);
-
-      noise(ctx);
-      requestAnimationFrame(loop);
-
-  })();
-
-</script>
-<script>
-
-  var DEFAULT_CHANNEL_INTERVAL = 6000;
-
-  var player;
-
-  var channels = getAllChannels();
-  var channelIndex = 0;
-
-  var staticChannelVideo = canvas;
-  var staticChannelSound = document.getElementById('static-audio');
-
-  staticChannelSound.loop = true;
-  staticChannelSound.oncanplay = function () {
-
-    staticChannelSound.play();
-
-  };
-
-  function onYouTubeIframeAPIReady() {
-
-    player = new YT.Player('player', {
-      height: '100%',
-      width: '100%',
-      videoId: channels[channelIndex],
-      playerVars: {
-        // Play automatically
-        autoplay: 1,
-        // Hide player controls
-        controls: 0,
-        // Hide all video info
-        showinfo: 0,
-        // Hide progress bar (unnecessary for HTML5 player)
-        autohide: 1,
-        // Hide annotations
-        iv_load_policy: 3,
-        // Hide related videos at the end
-        rel: 0,
-        // Slow YouTube's branding roll
-        modestbranding: 1
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerReady
-      }
-    });
-
-  }
-
-  function onPlayerReady(e) {
-
-    if (e.data === YT.PlayerState.PLAYING) {
-
-      toggleStaticChannel();
-      setTimeout(function () {
-
-        changeChannel(channels[++channelIndex]);
-
-      }, DEFAULT_CHANNEL_INTERVAL);
-
-    }
-
-  }
-
-  function toggleShow(elem) {
-
-    elem.style.display = !elem.style.display || elem.style.display === 'none' ? 'block' : 'none';
-
-  }
-
-  function toggleStaticChannel() {
-
-    toggleShow(staticChannelVideo);
-
-    if (staticChannelSound.paused) {
-
-      staticChannelSound.play();
-
-    } else {
-
-      staticChannelSound.pause();
-
-    }
-
-  }
-
-  function changeChannel(channelId) {
-
-    if (!channelId) {
-
-      return;
-
-    }
-
-    player.pauseVideo();
-    toggleStaticChannel();
-    setTimeout(function () {
-
-      player.loadVideoById(channelId, 0, "large");
-
-    }, 800);
-
-  }
-
-  function getAllChannels() {
-
-    return [
-      'SItFvB0Upb8',
-      'MG_e_PSBknA',
-      'UhHhXukovMU',
-      'UGBZnfB46es',
-      '2RbRoF2AKAc',
-      'S8rNRmmosmA',
-      'X-TAaFg2vzY',
-      'sKLWwsGtuVI',
-      'W7Hoz2ZHYZM',
-      'Yi7KWVCwmkI',
-      'SFmM5CWnmtE',
-      'NgWn7zbgxZ4',
-      '5rz1TcLVFzY',
-      'MUzJjPL2HoA',
-      '9wz0KitxtDQ',
-      'pkC7dcxZ5_Q',
-      'iKC21wDarBo',
-      '19PWUliieNM',
-      'MOzmbza9D5c',
-      'mw_HKzo9Ync',
-      'cScB5FuQCIk',
-      'RXJKdh1KZ0w',
-      'oi78FH2QhrA'
-    ];
-
-  }
-
-</script>
+        <script src="js/static-channel.js"></script>
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
