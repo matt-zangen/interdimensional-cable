@@ -1,55 +1,98 @@
-<div style="position: fixed; z-index: -99; width: 100%; height: 100%">
-  <iframe id="player-frame" frameborder="0" height="100%" width="100%"
-    src="https://youtube.com/embed/?autoplay=1&controls=0&showinfo=0&autohide=1">
-  </iframe>
+<div id="player" style="position: fixed; z-index: -99; width: 100%; height: 100%">
 </div>
+<img id="static" src="https://fat.gfycat.com/ThisDifficultCats.gif" style="display: block">
 <script>
-(function () {
 
-  var PLAYER_BASE_URL = 'https://youtube.com/embed/';
-  var PLAYER_QUERY = serializeQuery({
-    // Play automatically
-    autoplay: 1,
-    // Hide player controls
-    controls: 0,
-    // Hide all video info
-    showinfo: 0,
-    // Hide progress bar (unnecessary for HTML5 player)
-    autohide: 1,
-    // Hide annotations
-    iv_load_policy: 3,
-    // Hide related videos at the end
-    rel: 0,
-    // Slow YouTube's branding roll
-    modestbranding: 1
-  });
-  var DEFAULT_CHANNEL_INTERVAL = 10000;
+  var tag = document.createElement('script');
 
-  initPlayer();
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-  function initPlayer() {
+</script>
+<script>
 
-    var i = 0;
+  var DEFAULT_CHANNEL_INTERVAL = 4000;
 
-    changeChannel(i);
+  var player;
 
-    setInterval(function () {
+  var channels = getAllChannels();
+  var channelIndex = 0;
 
-      changeChannel(++i);
+  var staticChannelElem = document.getElementById('static');
 
-    }, DEFAULT_CHANNEL_INTERVAL);
+  function onYouTubeIframeAPIReady() {
+
+    player = new YT.Player('player', {
+      height: '100%',
+      width: '100%',
+      videoId: channels[channelIndex],
+      playerVars: {
+        // Play automatically
+        autoplay: 1,
+        // Hide player controls
+        controls: 0,
+        // Hide all video info
+        showinfo: 0,
+        // Hide progress bar (unnecessary for HTML5 player)
+        autohide: 1,
+        // Hide annotations
+        iv_load_policy: 3,
+        // Hide related videos at the end
+        rel: 0,
+        // Slow YouTube's branding roll
+        modestbranding: 1
+      },
+      events: {
+        onReady: onPlayerReady,
+        onStateChange: onPlayerReady
+      }
+    });
 
   }
 
-  function changeChannel(channelIndex) {
+  function onPlayerReady(e) {
 
-    var channelId = getAllChannels()[channelIndex];
+    if (e.data === YT.PlayerState.PLAYING) {
 
-    if (channelId) {
+      toggleStaticChannel();
 
-      document.getElementById('player-frame').src = PLAYER_BASE_URL + channelId + PLAYER_QUERY;
+      setTimeout(function () {
+
+        changeChannel(channels[++channelIndex]);
+
+      }, DEFAULT_CHANNEL_INTERVAL);
 
     }
+
+  }
+
+  function toggleShow(elem) {
+
+    elem.style.display = !elem.style.display || elem.style.display === 'none' ? 'block' : 'none';
+
+  }
+
+  function toggleStaticChannel() {
+
+    toggleShow(staticChannelElem);
+
+  }
+
+  function changeChannel(channelId) {
+
+    if (!channelId) {
+
+      return;
+
+    }
+
+    toggleStaticChannel();
+    setTimeout(function () {
+
+      player.loadVideoById(channelId, 0, "large");
+
+    }, 800);
 
   }
 
@@ -107,5 +150,4 @@
 
   }
 
-}());
 </script>
