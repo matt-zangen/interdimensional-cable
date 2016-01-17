@@ -1,0 +1,103 @@
+<html>
+<head>
+	<title>TV</title>
+	<style type='text/css' rel='stylesheet'>
+		#tv {
+			background: url(./assets/wood.jpg) repeat;
+			height: 99%;
+			width: 99%;
+			position: absolute;
+		}
+		#screen {
+			background: white;
+			height: 85%;
+			width: 85%;
+			margin: 5% 0 0 5%;
+			border-radius: 5%;
+			-moz-box-shadow: inset 0 0 200px #000000;
+		   	-webkit-box-shadow: inset 0 0 200px #000000;
+		   	box-shadow: inset 0 0 200px #000000;
+		}
+		.btn {
+			height: 5vw;
+			width: 5vw;
+			background: #F8F8D8;
+			border-radius: 50%;
+			right: 2.5%;
+			-moz-box-shadow: 3px 5px 6px 4px #999999;
+			-webkit-box-shadow: 3px 5px 6px 4px #999999;
+			box-shadow: 3px 5px 0px 0px #999999;
+		}
+		.btn-inner{
+			border: 1px solid #5F5F1B;
+			height: 5vw;
+			width: 1vw;
+			border-radius: 40%;
+			background: #4A2500;
+			margin: 0vw 2vw;
+			box-shadow: 3px 0px 0px 0px #999999;
+		}
+		#up-btn {
+			position: absolute;
+			top: 15%;
+		}
+		#down-btn {
+			position: absolute;
+			top: 30%;
+		}
+		.btn span{
+			height: 2.5vw;
+			position: absolute;
+			width: auto;
+			left: 2.3vw;
+			top: 0;
+			transform-origin: bottom center;
+			font-weight: bold;
+			color: #4A2500;
+		}
+		.numbah1 {
+			transform: rotate(60deg);
+		}
+		.numbah2 {
+			transform: rotate(120deg);
+		}
+		.numbah3 {
+			transform: rotate(180deg);
+		}
+		.numbah4 {
+			transform: rotate(240deg);
+		}
+		.numbah5 {
+			transform: rotate(300deg);
+		}
+		.numbah6 {
+			transform: rotate(0deg);
+		}
+	</style>
+</head>
+<body>
+	<div id="tv">
+	<div id="up-btn" class="btn">
+		<span class="numbah1">1</span>
+		<span class="numbah2">2</span>
+		<span class="numbah3">3</span>
+		<span class="numbah4">4</span>
+		<span class="numbah5">5</span>
+ 		<span class="numbah6">6</span>
+<div id="up-btn-inner" class="btn-inner"></div> 
+
+	</div>
+
+	<div id="down-btn" class="btn">
+		<span class="numbah1">1</span>
+		<span class="numbah2">2</span>
+		<span class="numbah3">3</span>
+		<span class="numbah4">4</span>
+		<span class="numbah5">5</span>
+ 		<span class="numbah6">6</span>
+		<div id="down-btn-inner" class="btn-inner"></div>
+	</div>
+		<div id="screen"></div>
+	</div>
+</body>
+</html>
